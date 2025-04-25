@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>discordで書かれたコードをコピー</title>
+    <title>discordで書かれたフレコをコピー</title>
 </head>
 <body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
 
@@ -21,13 +21,13 @@
             const copyStatus = document.getElementById('copyStatus');
 
             if (!sanitizedHash || sanitizedHash.length !== 12 || !/^\d{12}$/.test(sanitizedHash)) {
-                copyStatus.innerText = 'コード: 読み込み中';
+                copyStatus.innerText = 'フレコ: 読み込み中';
                 copyButton.innerText = 'コピーする';
                 copyButton.disabled = true;
                 return;
             }
 
-            copyStatus.innerText = 'コード: ' + rawHash;
+            copyStatus.innerText = 'フレコ: ' + rawHash;
             copyButton.dataset.clipboardText = sanitizedHash;
             copyButton.innerText = 'コピーする';
             copyButton.disabled = false;
