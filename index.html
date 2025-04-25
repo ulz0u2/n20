@@ -11,7 +11,6 @@
     <button onclick="copyToClipboard()" id="copyButton" style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" disabled>コピーする</button>
 
     <script>
-        window.onload = displayInitialStatus;
         window.onhashchange = displayInitialStatus;
 
         let loadingDots = 0;
@@ -19,7 +18,10 @@
 
         function displayInitialStatus() {
             const rawHash = location.hash.slice(1); // #を除去
+            console.log("rawHash:", rawHash); // デバッグ用
             const sanitizedHash = rawHash.replace(/-/g, '').replace('SW-', ''); // ハイフンを除去し、SW-も削除
+            console.log("sanitizedHash:", sanitizedHash); // デバッグ用
+
             const copyButton = document.getElementById('copyButton');
             const copyStatus = document.getElementById('copyStatus');
 
