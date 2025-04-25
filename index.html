@@ -23,20 +23,22 @@
             const copyButton = document.getElementById('copyButton');
             const copyStatus = document.getElementById('copyStatus');
 
-            if (!sanitizedHash || sanitizedHash.length !== 12 || !/^\d{12}$/.test(sanitizedHash)) {
+            // 正しい12桁のフレコが存在する場合のみ表示を更新
+            if (sanitizedHash.length === 12 && /^\d{12}$/.test(sanitizedHash)) {
+                copyStatus.innerText = 'フレコ: ' + rawHash; // ハイフンありで表示
+                copyButton.dataset.clipboardText = sanitizedHash; // ハイフンなしで保存
+                copyButton.innerText = 'コピーする';
+                copyButton.disabled = false;
+                
+                // ローディングアニメーションを開始
+                startLoadingAnimation(copyStatus);
+            } else {
+                // フレコが無い、または不正な場合は読み込み中に戻す
                 copyStatus.innerText = 'フレコ: 読み込み中';
                 copyButton.innerText = 'コピーする';
                 copyButton.disabled = true;
-                return;
+                stopLoadingAnimation(); // 不正な場合はアニメーションを停止
             }
-
-            copyStatus.innerText = 'フレコ: ' + rawHash;
-            copyButton.dataset.clipboardText = sanitizedHash;
-            copyButton.innerText = 'コピーする';
-            copyButton.disabled = false;
-
-            // ローディングアニメーションを開始
-            startLoadingAnimation(copyStatus);
         }
 
         function startLoadingAnimation(copyStatus) {
