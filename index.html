@@ -7,14 +7,11 @@
 </head>
 <body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
 
-    <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">コピー: 読み込み中</div>
+    <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">フレコ: 読み込み中</div>
     <button onclick="copyToClipboard()" id="copyButton" style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" disabled>コピーする</button>
 
     <script>
         window.onhashchange = displayInitialStatus;
-
-        let loadingDots = 0;
-        let loadingInterval;
 
         function displayInitialStatus() {
             const rawHash = location.hash.slice(1); // #を除去
@@ -31,29 +28,12 @@
                 copyButton.dataset.clipboardText = sanitizedHash; // ハイフンなしで保存
                 copyButton.innerText = 'コピーする';
                 copyButton.disabled = false;
-                
-                // ローディングアニメーションを開始
-                startLoadingAnimation(copyStatus);
             } else {
-                // フレコが無い、または不正な場合は読み込み中に戻す
-                copyStatus.innerText = 'フレコ: 読み込み中';
+                // フレコが無い、または不正な場合は表示を更新
+                copyStatus.innerText = 'フレコ: 無効なデータ';
                 copyButton.innerText = 'コピーする';
                 copyButton.disabled = true;
-                stopLoadingAnimation(); // 不正な場合はアニメーションを停止
             }
-        }
-
-        function startLoadingAnimation(copyStatus) {
-            // ローディングアニメーションの開始
-            loadingInterval = setInterval(function() {
-                copyStatus.innerText = 'フレコ: 読み込み中' + '.'.repeat(loadingDots);
-                loadingDots = (loadingDots + 1) % 4; // 3点まで増えて、また0に戻す
-            }, 500);
-        }
-
-        function stopLoadingAnimation() {
-            // アニメーションを停止
-            clearInterval(loadingInterval);
         }
 
         function copyToClipboard() {
@@ -68,8 +48,6 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-
-            stopLoadingAnimation(); // コピー後にローディングを停止
 
             copyButton.innerText = 'コピーしました！';
             copyButton.disabled = true;
