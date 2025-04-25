@@ -19,7 +19,7 @@
 
         function displayInitialStatus() {
             const rawHash = location.hash.slice(1); // #を除去
-            const sanitizedHash = rawHash.replace(/-/g, ''); // ハイフンを除去
+            const sanitizedHash = rawHash.replace(/-/g, '').replace('SW-', ''); // ハイフンを除去し、SW-も削除
             const copyButton = document.getElementById('copyButton');
             const copyStatus = document.getElementById('copyStatus');
 
