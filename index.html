@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>discordで書かれたコードをコピー</title>
+</head>
+<body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
+
+    <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">コピー: 読み込み中</div>
+    <button onclick="copyToClipboard()" id="copyButton" style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" disabled>コピーする</button>
+
+    <script>
+        window.onload = displayInitialStatus;
+        window.onhashchange = displayInitialStatus;
+
+        function displayInitialStatus() {
+            const rawHash = location.hash.slice(1); // #を除去
+            const sanitizedHash = rawHash.replace(/-/g, ''); // ハイフンを除去
+            const copyButton = document.getElementById('copyButton');
+            const copyStatus = document.getElementById('copyStatus');
+
+            if (!sanitizedHash || sanitizedHash.length !== 12 || !/^\d{12}$/.test(sanitizedHash)) {
+                copyStatus.innerText = 'コード: 読み込み中';
+                copyButton.innerText = 'コピーする';
+                copyButton.disabled = true;
+                return;
+            }
+
+            copyStatus.innerText = 'コード: ' + rawHash;
+            copyButton.dataset.clipboardText = sanitizedHash;
+            copyButton.innerText = 'コピーする';
+            copyButton.disabled = false;
+        }
+
+        function copyToClipboard() {
+            const copyButton = document.getElementById('copyButton');
+            const textToCopy = copyButton.dataset.clipboardText;
+
+            if (!textToCopy) return;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            copyButton.innerText = 'コピーしました！';
+            copyButton.disabled = true;
+        }
+    </script>
+
+</body>
+</html>
