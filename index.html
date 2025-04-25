@@ -8,13 +8,30 @@
 <body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
 
   <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">
-    フレコ: 読み込み中...
+    フレコ: 読み込み中.
   </div>
   <button onclick="copyToClipboard()" id="copyButton"
     style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" 
     disabled>コピーする</button>
 
   <script>
+    let loadingInterval = null;
+
+    function startLoadingAnimation() {
+      const copyStatus = document.getElementById('copyStatus');
+      let dots = 1;
+      clearInterval(loadingInterval);
+      loadingInterval = setInterval(() => {
+        copyStatus.innerText = 'フレコ: 読み込み中' + '.'.repeat(dots);
+        dots = (dots % 3) + 1;
+      }, 500);
+    }
+
+    function stopLoadingAnimation(text) {
+      clearInterval(loadingInterval);
+      document.getElementById('copyStatus').innerText = text;
+    }
+
     window.onload = displayInitialStatus;
     window.onhashchange = displayInitialStatus;
 
@@ -23,25 +40,24 @@
       const sanitized = rawHash.replace(/^SW-/i, '').replace(/-/g, ''); // SW-とハイフンを除去
 
       const copyButton = document.getElementById('copyButton');
-      const copyStatus = document.getElementById('copyStatus');
 
+      // 無効な文字が含まれてる or 空の場合 → ローディング
       if (!rawHash || !/^[\d\-SWsw]+$/.test(rawHash)) {
-        // 何も書かれてない or SW, -, 数字以外が含まれてる → 読み込み中
-        copyStatus.innerText = 'フレコ: 読み込み中...';
+        startLoadingAnimation();
         copyButton.disabled = true;
         copyButton.innerText = 'コピーする';
         return;
       }
 
+      // 12桁数字ならOK
       if (/^\d{12}$/.test(sanitized)) {
-        // 12桁の数字 → OK
-        copyStatus.innerText = 'フレコ: ' + rawHash;
+        stopLoadingAnimation('フレコ: ' + rawHash);
         copyButton.dataset.clipboardText = sanitized;
         copyButton.disabled = false;
         copyButton.innerText = 'コピーする';
       } else {
-        // 形式は正しそうだけど桁数が違う → 読み込み中
-        copyStatus.innerText = 'フレコ: 読み込み中...';
+        // 桁数不足など → ローディング
+        startLoadingAnimation();
         copyButton.disabled = true;
         copyButton.innerText = 'コピーする';
       }
