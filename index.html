@@ -4,10 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>discordで書かれたフレコをコピー</title>
+    <style>
+        /* ローディングのドットアニメーション */
+        @keyframes dot-blink {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+            100% { content: '.'; }
+        }
+
+        .loading-dots::after {
+            content: '.';
+            animation: dot-blink 1s infinite;
+        }
+    </style>
 </head>
 <body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
 
-    <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">コピー: 読み込み中</div>
+    <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">
+        フレコ: 読み込み中
+        <span class="loading-dots"></span> <!-- ローディングのドット -->
+    </div>
     <button onclick="copyToClipboard()" id="copyButton" style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" disabled>コピーする</button>
 
     <script>
