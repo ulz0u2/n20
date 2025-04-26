@@ -7,7 +7,7 @@
 </head>
 <body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
 
-  <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">
+  <div id="copyStatus" style="font-size: 25px; margin-top: 120px; font-weight: bold;">
     フレコ: 読み込み中.
   </div>
   <button onclick="copyToClipboard()" id="copyButton"
@@ -19,6 +19,7 @@
 
     function startLoadingAnimation() {
       const copyStatus = document.getElementById('copyStatus');
+      copyStatus.style.fontSize = '25px'; // ローディング時は小さく
       let dots = 1;
       clearInterval(loadingInterval);
       loadingInterval = setInterval(() => {
@@ -29,7 +30,9 @@
 
     function stopLoadingAnimation(text) {
       clearInterval(loadingInterval);
-      document.getElementById('copyStatus').innerText = text;
+      const copyStatus = document.getElementById('copyStatus');
+      copyStatus.style.fontSize = '35px'; // フレコ表示時は大きく
+      copyStatus.innerText = text;
     }
 
     window.onload = displayInitialStatus;
