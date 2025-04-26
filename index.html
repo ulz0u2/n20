@@ -7,7 +7,7 @@
 </head>
 <body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
 
-  <div id="copyStatus" style="font-size: 25px; margin-top: 120px; font-weight: bold;">
+  <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">
     フレコ: 読み込み中.
   </div>
   <button onclick="copyToClipboard()" id="copyButton"
@@ -19,9 +19,13 @@
 
     function startLoadingAnimation() {
       const copyStatus = document.getElementById('copyStatus');
-      copyStatus.style.fontSize = '25px'; // ローディング時は小さく
-      let dots = 1;
       clearInterval(loadingInterval);
+
+      // ここで直接初期表示を設定する
+      copyStatus.innerText = 'フレコ: 読み込み中.';
+      copyStatus.style.fontSize = '25px'; // 小さくする！
+
+      let dots = 1;
       loadingInterval = setInterval(() => {
         copyStatus.innerText = 'フレコ: 読み込み中' + '.'.repeat(dots);
         dots = (dots % 3) + 1;
@@ -31,8 +35,8 @@
     function stopLoadingAnimation(text) {
       clearInterval(loadingInterval);
       const copyStatus = document.getElementById('copyStatus');
-      copyStatus.style.fontSize = '35px'; // フレコ表示時は大きく
       copyStatus.innerText = text;
+      copyStatus.style.fontSize = '35px'; // 大きくする！
     }
 
     window.onload = displayInitialStatus;
@@ -44,7 +48,6 @@
 
       const copyButton = document.getElementById('copyButton');
 
-      // 無効な文字が含まれてる or 空の場合 → ローディング
       if (!rawHash || !/^[\d\-SWsw]+$/.test(rawHash)) {
         startLoadingAnimation();
         copyButton.disabled = true;
@@ -52,14 +55,12 @@
         return;
       }
 
-      // 12桁数字ならOK
       if (/^\d{12}$/.test(sanitized)) {
         stopLoadingAnimation('フレコ: ' + rawHash);
         copyButton.dataset.clipboardText = sanitized;
         copyButton.disabled = false;
         copyButton.innerText = 'コピーする';
       } else {
-        // 桁数不足など → ローディング
         startLoadingAnimation();
         copyButton.disabled = true;
         copyButton.innerText = 'コピーする';
