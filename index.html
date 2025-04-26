@@ -5,14 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>discordで書かれたフレコをコピー</title>
 </head>
-<body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif;">
+<body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif; position: relative; min-height: 100vh;">
 
   <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">
     フレコ: 読み込み中.
   </div>
+
   <button onclick="copyToClipboard()" id="copyButton"
     style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" 
     disabled>コピーする</button>
+
+  <!-- アイコンボタンを右下に配置 -->
+  <a href="https://lounge.nintendo.com/friendcode/0000-0000-0000/QFkR9sexkEnG" target="_blank" id="appLink">
+    <img src="86E2FFE3-11F5-4473-920F-687117EF7BB7.png" alt="Switch Online"
+      style="width: 60px; position: fixed; right: 20px; bottom: 20px; z-index: 100;">
+  </a>
 
   <script>
     let loadingInterval = null;
@@ -21,7 +28,6 @@
       const copyStatus = document.getElementById('copyStatus');
       clearInterval(loadingInterval);
 
-      // ここで直接初期表示を設定する
       copyStatus.innerText = 'フレコ: 読み込み中.';
       copyStatus.style.fontSize = '25px'; // 小さくする！
 
@@ -83,5 +89,6 @@
       copyButton.disabled = true;
     }
   </script>
+
 </body>
 </html>
