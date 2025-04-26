@@ -4,32 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>discordで書かれたフレコをコピー</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Yu Gothic', 'メイリオ', sans-serif;
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+    #copyStatus {
+      font-size: 35px;
+      margin-top: 120px;
+      font-weight: bold;
+    }
+    #copyButton {
+      background-color: #0D6EFD;
+      color: white;
+      font-size: 30px;
+      margin-top: 30px;
+      border-radius: 9px;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+    #linkButton {
+      display: inline-block;
+      background-color: #E60012; /* 赤色 */
+      color: white;
+      font-size: 24px;
+      margin-top: 30px;
+      padding: 15px 30px;
+      border-radius: 20px; /* 丸みを強く */
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    #linkButton:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
-<body style="text-align: center; font-family: 'Yu Gothic', 'メイリオ', sans-serif; position: relative; min-height: 100vh;">
+<body>
 
-  <div id="copyStatus" style="font-size: 35px; margin-top: 120px; font-weight: bold;">
-    フレコ: 読み込み中.
-  </div>
-
-  <button onclick="copyToClipboard()" id="copyButton"
-    style="background-color: #0D6EFD; color: white; font-size: 30px; margin-top: 30px; border-radius: 9px;" 
-    disabled>コピーする</button>
-
-  <!-- アイコンボタンを右下に配置 -->
-  <a href="https://lounge.nintendo.com/friendcode/0000-0000-0000/QFkR9sexkEnG" target="_blank" id="appLink">
-    <img src="86E2FFE3-11F5-4473-920F-687117EF7BB7.png" alt="Switch Online"
-      style="width: 60px; position: fixed; right: 20px; bottom: 20px; z-index: 100;">
-  </a>
+  <div id="copyStatus">フレコ: 読み込み中.</div>
+  <button onclick="copyToClipboard()" id="copyButton" disabled>コピーする</button>
+  <br>
+  <button id="linkButton" onclick="openLink()" disabled>アプリへ飛ぶ</button>
 
   <script>
     let loadingInterval = null;
+    let currentLink = '#';
 
     function startLoadingAnimation() {
       const copyStatus = document.getElementById('copyStatus');
       clearInterval(loadingInterval);
-
       copyStatus.innerText = 'フレコ: 読み込み中.';
-      copyStatus.style.fontSize = '25px'; // 小さくする！
+      copyStatus.style.fontSize = '25px';
 
       let dots = 1;
       loadingInterval = setInterval(() => {
@@ -42,22 +73,23 @@
       clearInterval(loadingInterval);
       const copyStatus = document.getElementById('copyStatus');
       copyStatus.innerText = text;
-      copyStatus.style.fontSize = '35px'; // 大きくする！
+      copyStatus.style.fontSize = '35px';
     }
 
     window.onload = displayInitialStatus;
     window.onhashchange = displayInitialStatus;
 
     function displayInitialStatus() {
-      const rawHash = location.hash.slice(1); // #を除去
-      const sanitized = rawHash.replace(/^SW-/i, '').replace(/-/g, ''); // SW-とハイフンを除去
-
+      const rawHash = location.hash.slice(1);
+      const sanitized = rawHash.replace(/^SW-/i, '').replace(/-/g, '');
       const copyButton = document.getElementById('copyButton');
+      const linkButton = document.getElementById('linkButton');
 
       if (!rawHash || !/^[\d\-SWsw]+$/.test(rawHash)) {
         startLoadingAnimation();
         copyButton.disabled = true;
         copyButton.innerText = 'コピーする';
+        linkButton.disabled = true;
         return;
       }
 
@@ -66,10 +98,13 @@
         copyButton.dataset.clipboardText = sanitized;
         copyButton.disabled = false;
         copyButton.innerText = 'コピーする';
+        currentLink = 'https://lounge.nintendo.com/friendcode/' + rawHash + '/QFkR9sexkEnG';
+        linkButton.disabled = false;
       } else {
         startLoadingAnimation();
         copyButton.disabled = true;
         copyButton.innerText = 'コピーする';
+        linkButton.disabled = true;
       }
     }
 
@@ -87,6 +122,12 @@
 
       copyButton.innerText = 'コピーしました！';
       copyButton.disabled = true;
+    }
+
+    function openLink() {
+      if (currentLink && currentLink !== '#') {
+        window.open(currentLink, '_blank');
+      }
     }
   </script>
 
